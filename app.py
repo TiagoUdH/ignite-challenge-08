@@ -14,7 +14,7 @@ def create_snack():
   
   name = data.get("name")
   description = data.get("description")
-  in_diet = data.get("in_diet")
+  in_diet = 'in_diet' in data
   
   if name and description and in_diet:
     snack = Snack(name=name, description=description, in_diet=in_diet)
@@ -44,6 +44,29 @@ def create_snack():
     response["in_diet"] = "This field is required"
     
   return jsonify(response), 400
+
+@app.route('/snacks/<int:snack_id>', methods=["PUT"])
+def update_snack(snack_id):
+  snack = db.session.get(Snack, snack_id)
+  
+  if not snack:
+    return jsonify({"message": "Snack not found"}), 404
+  
+  data = request.json
+  
+  if 'name' in data:
+    snack.name = data["name"]
+    
+  if 'description' in data:
+    snack.description = data["description"]
+    
+  if 'in_diet' in data:
+    snack.in_diet = data["in_diet"]
+    
+  db.session.commit()
+  
+  return jsonify({"message": "Snack updated successfully"})
+    
 
 if __name__ == "__main__":
   app.run(debug=True)
