@@ -9,5 +9,5 @@ class Snack(db.Model):
   id: Mapped[int] = mapped_column(primary_key=True)
   name: Mapped[str] = mapped_column(String(30))
   description: Mapped[str] = mapped_column(String(120))
-  createdAt: Mapped[datetime.datetime] = mapped_column(default=datetime.datetime.utcnow)
-  inDiet: Mapped[bool] = mapped_column(Boolean, default=False)
+  created_at: Mapped[datetime.datetime] = mapped_column(default=datetime.datetime.utcnow)
+  in_diet: Mapped[bool] = mapped_column(Boolean, default=False)
