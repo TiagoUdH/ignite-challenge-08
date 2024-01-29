@@ -79,5 +79,28 @@ def delete_snack(snack_id):
   
   return jsonify({"message": "Snack deleted successfully"}) 
 
+@app.route('/snacks', methods=["GET"])
+def get_snacks():
+  snacks = db.session.execute(db.select(Snack)).scalars().all()
+  snacks_list = []  
+  
+  for snack in snacks:
+    snack_data = {
+      "id": snack.id,
+      "name": snack.name,
+      "description": snack.description,
+      "in_diet": snack.in_diet,
+      "created_at": snack.created_at.strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]
+    }
+    
+    snacks_list.append(snack_data)
+  
+  response = {
+    "snacks": snacks_list,
+    "snack_amount": len(snacks_list)
+  }
+  
+  return jsonify(response)
+  
 if __name__ == "__main__":
   app.run(debug=True)
