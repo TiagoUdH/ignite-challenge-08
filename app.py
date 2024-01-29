@@ -88,7 +88,6 @@ def get_snacks():
     snack_data = {
       "id": snack.id,
       "name": snack.name,
-      "description": snack.description,
       "in_diet": snack.in_diet,
       "created_at": snack.created_at.strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]
     }
@@ -101,6 +100,21 @@ def get_snacks():
   }
   
   return jsonify(response)
+
+@app.route('/snacks/<int:snack_id>', methods=["GET"])
+def get_snack_details(snack_id):
+  snack = db.session.get(Snack, snack_id)
+  
+  if snack:
+    return jsonify({
+      "id": snack.id,
+      "name": snack.name,
+      "description": snack.description,
+      "in_diet": snack.in_diet,
+      "created_at": snack.created_at.strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]
+    })
+    
+  return jsonify({"message": "Snack not found"}), 404
   
 if __name__ == "__main__":
   app.run(debug=True)
