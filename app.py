@@ -67,6 +67,17 @@ def update_snack(snack_id):
   
   return jsonify({"message": "Snack updated successfully"})
     
+@app.route('/snacks/<int:snack_id>', methods=["DELETE"])
+def delete_snack(snack_id):
+  snack = db.session.get(Snack, snack_id)
+  
+  if not snack:
+    return jsonify({"message": "Snack not found"}), 404
+  
+  db.session.delete(snack)
+  db.session.commit()
+  
+  return jsonify({"message": "Snack deleted successfully"}) 
 
 if __name__ == "__main__":
   app.run(debug=True)
