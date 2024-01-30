@@ -46,7 +46,7 @@ def create_snack():
   return jsonify(response), 400
 
 @app.route('/snacks/<int:snack_id>', methods=["PUT"])
-def update_snack(snack_id):
+def update_snack(snack_id: int):
   snack = db.session.get(Snack, snack_id)
   
   if not snack:
@@ -68,7 +68,7 @@ def update_snack(snack_id):
   return jsonify({"message": "Snack updated successfully"})
     
 @app.route('/snacks/<int:snack_id>', methods=["DELETE"])
-def delete_snack(snack_id):
+def delete_snack(snack_id: int):
   snack = db.session.get(Snack, snack_id)
   
   if not snack:
@@ -102,7 +102,7 @@ def get_snacks():
   return jsonify(response)
 
 @app.route('/snacks/<int:snack_id>', methods=["GET"])
-def get_snack_details(snack_id):
+def get_snack_details(snack_id: int):
   snack = db.session.get(Snack, snack_id)
   
   if snack:
