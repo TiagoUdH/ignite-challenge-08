@@ -89,6 +89,29 @@ def test_update_snack(name: (str | None), description: (str | None), in_diet: (b
   assert response.status_code == 200
   assert response_json == expected_response
   
+def test_get_snacks():
+  response = requests.get(f"{BASE_URL}/snacks")
+  response_json = response.json()
+  
+  assert response.status_code == 200
+  
+  for snack in response_json["snacks"]:
+    assert "id" in snack
+    assert "name" in snack
+    assert "created_at" in snack
+    assert "in_diet" in snack
+    
+    get_details_response = requests.get(f"{BASE_URL}/snacks/{snack["id"]}")
+    get_details_response_json = get_details_response.json()
+    
+    assert get_details_response.status_code == 200
+    
+    del get_details_response_json["description"]
+    
+    assert get_details_response_json == snack
+    
+  assert response_json["snack_amount"] == len(response_json["snacks"])
+  
 def teste_delete_snack():
   response = requests.delete(f"{BASE_URL}/snacks/{existing_snack["id"]}")
   response_json = response.json()
