@@ -129,3 +129,24 @@ def test_delete_snack():
   response = requests.get(f"{BASE_URL}/snacks/{existing_snack["id"]}")
   
   assert response.status_code == 404
+  
+def test_not_founds():
+  not_found_message = "Snack not found"
+  
+  response = requests.get(f"{BASE_URL}/snacks/{existing_snack["id"]}")
+  response_json = response.json()
+  
+  assert response.status_code == 404
+  assert response_json["message"] == not_found_message
+  
+  response = requests.delete(f"{BASE_URL}/snacks/{existing_snack["id"]}")
+  response_json = response.json()
+  
+  assert response.status_code == 404
+  assert response_json["message"] == not_found_message
+  
+  response = requests.put(f"{BASE_URL}/snacks/{existing_snack["id"]}", json={"name": "Hamburguér"})
+  response_json = response.json()
+  
+  assert response.status_code == 404
+  assert response_json["message"] == not_found_message
