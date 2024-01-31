@@ -17,7 +17,7 @@ def create_snack():
   in_diet = 'in_diet' in data
   
   if name and description and in_diet:
-    snack = Snack(name=name, description=description, in_diet=in_diet)
+    snack = Snack(name=name, description=description, in_diet=data["in_diet"])
     
     db.session.add(snack)
     db.session.commit()

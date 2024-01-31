@@ -2,7 +2,7 @@ import pytest
 import requests
 from itertools import product
 
-from utils import is_none_param, parameter_check
+from utils import is_none_param, parameter_check_for_creation, parameter_check_for_update
 from models.snack import Snack
 
 BASE_URL = "http://127.0.0.1:5000/"
@@ -17,20 +17,20 @@ existing_snack = None
 
 @pytest.mark.parametrize("name, description, in_diet", combinations_for_creation)
 def test_create_snack(name: (str | None), description: (str | None), in_diet: (bool | None)):
-  invalid_expected_response = parameter_check(name, description, in_diet, "This field is required")
+  invalid_expected_response = parameter_check_for_creation(name, description, in_diet, "This field is required")
   
-  new_snack_data = {}
+  request_body = {}
     
   if not is_none_param(name):
-    new_snack_data["name"] = name
+    request_body["name"] = name
       
   if not is_none_param(description):
-    new_snack_data["description"] = description
+    request_body["description"] = description
       
   if not is_none_param(in_diet):
-    new_snack_data["in_diet"] = in_diet
-  
-  response = requests.post(f"{BASE_URL}/snacks", json=new_snack_data)
+    request_body["in_diet"] = in_diet
+    
+  response = requests.post(f"{BASE_URL}/snacks", json=request_body)
   response_json = response.json()
   
   if invalid_expected_response:
@@ -55,3 +55,36 @@ def test_create_snack(name: (str | None), description: (str | None), in_diet: (b
     
     global existing_snack
     existing_snack = response_json
+
+names_for_update = [None, "Burguer"]
+descriptions_for_update = [None, "Prato de poucas calorias"]
+in_diet_for_update = [None, False]
+
+combinations_for_update = list(product(names_for_update, descriptions_for_update, in_diet_for_update))
+   
+@pytest.mark.parametrize("name, description, in_diet", combinations_for_update)
+def test_update_snack(name: (str | None), description: (str | None), in_diet: (bool | None)):
+  request_body = {}
+    
+  if not is_none_param(name):
+    request_body["name"] = name
+      
+  if not is_none_param(description):
+    request_body["description"] = description
+      
+  if not is_none_param(in_diet):
+    request_body["in_diet"] = in_diet
+    
+  response = requests.put(f"{BASE_URL}/snacks/{existing_snack["id"]}", json=request_body)
+  response_json = response.json()
+  
+  assert response.status_code == 200
+  assert response_json["message"] == "Snack updated successfully"
+  
+  response = requests.get(f"{BASE_URL}/snacks/{existing_snack["id"]}")
+  response_json = response.json()
+    
+  expected_response = parameter_check_for_update(name, description, in_diet, existing_snack)
+  
+  assert response.status_code == 200
+  assert response_json == expected_response
