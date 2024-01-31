@@ -112,7 +112,14 @@ def test_get_snacks():
     
   assert response_json["snack_amount"] == len(response_json["snacks"])
   
-def teste_delete_snack():
+def test_get_snack_details():
+  response = requests.get(f"{BASE_URL}/snacks/{existing_snack["id"]}")
+  response_json = response.json()
+  
+  assert response.status_code == 200
+  assert response_json == existing_snack
+  
+def test_delete_snack():
   response = requests.delete(f"{BASE_URL}/snacks/{existing_snack["id"]}")
   response_json = response.json()
   
