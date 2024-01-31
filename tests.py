@@ -88,3 +88,14 @@ def test_update_snack(name: (str | None), description: (str | None), in_diet: (b
   
   assert response.status_code == 200
   assert response_json == expected_response
+  
+def teste_delete_snack():
+  response = requests.delete(f"{BASE_URL}/snacks/{existing_snack["id"]}")
+  response_json = response.json()
+  
+  assert response.status_code == 200
+  assert response_json["message"] == "Snack deleted successfully"
+  
+  response = requests.get(f"{BASE_URL}/snacks/{existing_snack["id"]}")
+  
+  assert response.status_code == 404
