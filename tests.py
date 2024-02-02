@@ -75,13 +75,13 @@ def test_update_snack(name: (str | None), description: (str | None), in_diet: (b
   if not is_none_param(in_diet):
     request_body["in_diet"] = in_diet
     
-  response = requests.put(f"{BASE_URL}/snacks/{existing_snack["id"]}", json=request_body)
+  response = requests.put(f"{BASE_URL}/snacks/{existing_snack['id']}", json=request_body)
   response_json = response.json()
   
   assert response.status_code == 200
   assert response_json["message"] == "Snack updated successfully"
   
-  response = requests.get(f"{BASE_URL}/snacks/{existing_snack["id"]}")
+  response = requests.get(f"{BASE_URL}/snacks/{existing_snack['id']}")
   response_json = response.json()
     
   expected_response = parameter_check_for_update(name, description, in_diet, existing_snack)
@@ -101,7 +101,7 @@ def test_get_snacks():
     assert "created_at" in snack
     assert "in_diet" in snack
     
-    get_details_response = requests.get(f"{BASE_URL}/snacks/{snack["id"]}")
+    get_details_response = requests.get(f"{BASE_URL}/snacks/{snack['id']}")
     get_details_response_json = get_details_response.json()
     
     assert get_details_response.status_code == 200
@@ -113,39 +113,39 @@ def test_get_snacks():
   assert response_json["snack_amount"] == len(response_json["snacks"])
   
 def test_get_snack_details():
-  response = requests.get(f"{BASE_URL}/snacks/{existing_snack["id"]}")
+  response = requests.get(f"{BASE_URL}/snacks/{existing_snack['id']}")
   response_json = response.json()
   
   assert response.status_code == 200
   assert response_json == existing_snack
   
 def test_delete_snack():
-  response = requests.delete(f"{BASE_URL}/snacks/{existing_snack["id"]}")
+  response = requests.delete(f"{BASE_URL}/snacks/{existing_snack['id']}")
   response_json = response.json()
   
   assert response.status_code == 200
   assert response_json["message"] == "Snack deleted successfully"
   
-  response = requests.get(f"{BASE_URL}/snacks/{existing_snack["id"]}")
+  response = requests.get(f"{BASE_URL}/snacks/{existing_snack['id']}")
   
   assert response.status_code == 404
   
 def test_not_founds():
   not_found_message = "Snack not found"
   
-  response = requests.get(f"{BASE_URL}/snacks/{existing_snack["id"]}")
+  response = requests.get(f"{BASE_URL}/snacks/{existing_snack['id']}")
   response_json = response.json()
   
   assert response.status_code == 404
   assert response_json["message"] == not_found_message
   
-  response = requests.delete(f"{BASE_URL}/snacks/{existing_snack["id"]}")
+  response = requests.delete(f"{BASE_URL}/snacks/{existing_snack['id']}")
   response_json = response.json()
   
   assert response.status_code == 404
   assert response_json["message"] == not_found_message
   
-  response = requests.put(f"{BASE_URL}/snacks/{existing_snack["id"]}", json={"name": "Hamburguér"})
+  response = requests.put(f"{BASE_URL}/snacks/{existing_snack['id']}", json={"name": "Hamburguér"})
   response_json = response.json()
   
   assert response.status_code == 404
